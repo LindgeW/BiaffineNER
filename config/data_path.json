@@ -1,0 +1,12 @@
+{
+  "conll_2003": {
+    "train": "./data/conll_2003/train.txt",
+    "dev": "./data/conll_2003/valid.txt",
+    "test": "./data/conll_2003/test.txt"
+  },
+  "pretrain": {
+    "word_embedding": "./embeddings/glove.6B.200d.txt",
+    "bert_model": "./bert/en_bert",
+    "bert_vocab": "./bert/en_bert/vocab.txt"
+  }
+}
