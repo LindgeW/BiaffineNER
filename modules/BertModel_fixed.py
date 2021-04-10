@@ -50,10 +50,8 @@ class BertEmbedding(nn.Module):
 
         # 根据bert piece长度切分
         bert_chunks = bert_out[bert_mask].split(bert_lens[mask].tolist())
-        bert_out = torch.stack(tuple([bc.mean(0) for bc in bert_chunks[1:-1]]))  # excluding CLS and SEP
-        bert_embed = bert_out.new_zeros(bz, seq_len-2, self.hidden_size)
+        bert_out = torch.stack(tuple([bc.mean(0) for bc in bert_chunks]))  
+        bert_embed = bert_out.new_zeros(bz, seq_len, self.hidden_size)
         # 将bert_embed中mask对应1的位置替换成bert_out，0的位置不变
-        mask[torch.arange(bz), mask.sum(dim=-1) - 1] = 0
-        mask = mask[:, 1:-1]
         bert_embed = bert_embed.masked_scatter_(mask.unsqueeze(dim=-1), bert_out)
         return bert_embed  # (bz, seq_len, hidden_dim)
