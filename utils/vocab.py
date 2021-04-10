@@ -89,7 +89,7 @@ class BERTVocab(object):
             return tokenizer.convert_tokens_to_ids(tokenizer.tokenize(token))
 
         tokenizer = self.bert_tokenizer
-        cls_tokens = [tokenizer.cls_token] + tokens + [tokenizer.sep_token]
+        cls_tokens = [tokenizer.cls_token] + tokens 
         bert_ids, bert_len = [], []
         bert_piece_ids = map(transform, cls_tokens)
         for piece in bert_piece_ids:
@@ -111,7 +111,7 @@ class BERTVocab(object):
         bert_ids, segments, bert_masks, bert_lens = [], [], [], []
         tokenizer = self.bert_tokenizer
         for tokens in tokens_lst:
-            cls_tokens = [tokenizer.cls_token] + tokens + [tokenizer.sep_token]
+            cls_tokens = [tokenizer.cls_token] + tokens 
             bert_piece_ids = map(transform, cls_tokens)
             bert_id, bert_len = [], []
             for piece in bert_piece_ids:
