@@ -145,7 +145,7 @@ def create_gold_map(sent_insts, ner_vocab):
 
 def batch_variable(batch_data, mVocab):
     batch_size = len(batch_data)
-    max_seq_len = max(len(insts) for insts in batch_data)
+    max_seq_len = 1 + max(len(insts) for insts in batch_data)  # align CLS
     max_wd_len = max(len(inst.word) for insts in batch_data for inst in insts)
 
     wd_vocab = mVocab['word']
@@ -163,10 +163,10 @@ def batch_variable(batch_data, mVocab):
     wd_lst = []
     for i, insts in enumerate(batch_data):
         seq_len = len(insts)
-        wd_ids[i, :seq_len] = torch.tensor([wd_vocab.inst2idx(inst.word) for inst in insts])
-        tag_ids[i, :seq_len] = torch.tensor([tag_vocab.inst2idx(inst.pos_tag) for inst in insts])
+        wd_ids[i, 1:seq_len+1] = torch.tensor([wd_vocab.inst2idx(inst.word) for inst in insts])
+        tag_ids[i, 1:seq_len+1] = torch.tensor([tag_vocab.inst2idx(inst.pos_tag) for inst in insts])
         for j, inst in enumerate(insts):
-            ch_ids[i, j, :len(inst.word)] = torch.tensor(ch_vocab.inst2idx(list(inst.word)))
+            ch_ids[i, 1+j, :len(inst.word)] = torch.tensor(ch_vocab.inst2idx(list(inst.word)))
 
         wd_lst.append([inst.word for inst in insts])
 
