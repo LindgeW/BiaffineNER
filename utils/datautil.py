@@ -97,10 +97,10 @@ def create_vocab(data_path, embed_file=None, bert_vocab_path=None, min_count=2):
 
 
 def create_vocab(datasets, embed_file=None, bert_vocab_path=None, min_count=2):
-    wd_vocab = Vocab(min_count, bos=None, eos=None)
+    wd_vocab = Vocab(min_count, eos=None)
     char_vocab = Vocab(bos=None, eos=None)
-    tag_vocab = Vocab(bos=None, eos=None)
-    ner_vocab = Vocab(bos=None, eos=None)
+    tag_vocab = Vocab(eos=None)
+    ner_vocab = Vocab(eos=None)
     for insts in datasets:
         for inst in insts:
             wd_vocab.add(inst.word)
@@ -162,9 +162,9 @@ def batch_variable(batch_data, mVocab):
 
     wd_lst = []
     for i, insts in enumerate(batch_data):
-        seq_len = len(insts)
-        wd_ids[i, 1:seq_len+1] = torch.tensor([wd_vocab.inst2idx(inst.word) for inst in insts])
-        tag_ids[i, 1:seq_len+1] = torch.tensor([tag_vocab.inst2idx(inst.pos_tag) for inst in insts])
+        seq_len = len(insts) + 1
+        wd_ids[i, :seq_len] = torch.tensor([wd_vocab.bos_idx] + [wd_vocab.inst2idx(inst.word) for inst in insts])
+        tag_ids[i, :seq_len] = torch.tensor([tag_vocab.bos_idx] + [tag_vocab.inst2idx(inst.pos_tag) for inst in insts])
         for j, inst in enumerate(insts):
             ch_ids[i, 1+j, :len(inst.word)] = torch.tensor(ch_vocab.inst2idx(list(inst.word)))
 
