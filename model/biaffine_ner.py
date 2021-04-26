@@ -40,9 +40,8 @@ class NERParser(nn.Module):
     def reset_params(self):
         nn.init.xavier_uniform_(self.bert_fc.weight)
 
-    def forward(self, wd_ids, char_ids, tag_ids, bert_inps):
+    def forward(self, wd_ids, char_ids, tag_ids, bert_inps, seq_mask):
         # bert_inps: bert_ids, segments, bert_mask, bert_lens
-        seq_mask = wd_ids.gt(0)
         bert_embed = self.bert_norm(self.bert_fc(self.bert_embedding(*bert_inps)))
         wd_embed = self.word_embedding(wd_ids)
         char_embed = self.char_embedding(char_ids)
