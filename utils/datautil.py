@@ -157,6 +157,7 @@ def batch_variable(batch_data, mVocab):
     wd_ids = torch.zeros((batch_size, max_seq_len), dtype=torch.long)
     ch_ids = torch.zeros((batch_size, max_seq_len, max_wd_len), dtype=torch.long)
     tag_ids = torch.zeros((batch_size, max_seq_len), dtype=torch.long)
+    mask = torch.zeros((batch_size, max_seq_len), dtype=torch.bool)
     # span ner target
     ner_ids = torch.zeros((batch_size, max_seq_len, max_seq_len), dtype=torch.long)
 
@@ -165,6 +166,7 @@ def batch_variable(batch_data, mVocab):
         seq_len = len(insts) + 1
         wd_ids[i, 1:seq_len] = torch.tensor([wd_vocab.inst2idx(inst.word) for inst in insts])
         tag_ids[i, 1:seq_len] = torch.tensor([tag_vocab.inst2idx(inst.pos_tag) for inst in insts])
+        mask[i, :seq_len].fill_(1)
         for j, inst in enumerate(insts):
             ch_ids[i, 1+j, :len(inst.word)] = torch.tensor(ch_vocab.inst2idx(list(inst.word)))
 
@@ -190,6 +192,7 @@ def batch_variable(batch_data, mVocab):
                  ch_ids=ch_ids,
                  tag_ids=tag_ids,
                  ner_ids=ner_ids,
+                 mask=mask,
                  bert_inps=bert_inps)
 
 
