@@ -172,7 +172,7 @@ class Trainer(object):
                 batch = batch_variable(batcher, self.vocabs)
                 batch.to_device(self.args.device)
 
-                pred_score = self.model(batch.wd_ids, batch.ch_ids, batch.tag_ids, batch.bert_inps)
+                pred_score = self.model(batch.wd_ids, batch.ch_ids, batch.tag_ids, batch.bert_inps, batch.mask)
                 loss = self.calc_loss(pred_score, batch.ner_ids)
                 loss_val = loss.data.item()
                 train_loss += loss_val
@@ -238,7 +238,7 @@ class Trainer(object):
                 batch = batch_variable(batcher, self.vocabs)
                 batch.to_device(self.args.device)
 
-                pred_score = self.model(batch.wd_ids, batch.ch_ids, batch.tag_ids, batch.bert_inps)
+                pred_score = self.model(batch.wd_ids, batch.ch_ids, batch.tag_ids, batch.bert_inps, batch.mask)
                 sent_lens = batch.wd_ids.gt(0).sum(dim=1)
                 gold_res = self.ner_gold(batch.ner_ids, sent_lens, self.vocabs['ner'])
                 pred_res = self.ner_pred(pred_score, sent_lens, self.vocabs['ner'])
