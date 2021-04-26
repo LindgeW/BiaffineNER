@@ -23,7 +23,7 @@ class Trainer(object):
         #                                 data_config['pretrain']['word_embedding'],
         #                                 data_config['pretrain']['bert_vocab'])
 
-        self.vocabs = self.build_vocabs(self.train_set+self.val_set+self.test_set,
+        self.vocabs = self.build_vocabs(self.train_set,
                                         data_config['pretrain']['word_embedding'],
                                         data_config['pretrain']['bert_vocab'])
 
