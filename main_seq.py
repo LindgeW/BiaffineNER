@@ -145,6 +145,7 @@ class Trainer(object):
                 nb_gold += 1
                 if t == p and begin:
                     nb_right += 1
+                    begin = False
 
         if return_prf:
             return self.calc_prf(nb_right, nb_pred, nb_gold)
