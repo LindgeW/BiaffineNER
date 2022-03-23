@@ -245,10 +245,3 @@ def test_():
     spans = [(1, 2), (3, 3), (4, 6)]
     tags = span2tags(spans, 10)
     print(tags)
-
-    main_str = '我是一个目前在阿里巴巴实习的研究生，方向是NLP'
-    sub_str = ['阿里巴巴', 'NLP']
-    res = seq_match(main_str, sub_str)
-    tags = span2tags(res, len(main_str))
-    print(res)
-    print(tags)
