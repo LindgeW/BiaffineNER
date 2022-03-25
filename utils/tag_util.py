@@ -111,6 +111,42 @@ def extract_cws_bies_span(tag_seq):
 
 # =============================NER============================== #
 
+def bio2span(labels):
+    spans = []
+    span = [None, -1, -1]
+    for i, tag in enumerate(labels):
+        if tag.startswith('B-'):
+            if span[2] != -1:
+                spans.append(span)
+            span = [tag.split('-')[1], i, i]
+            if i == len(labels) - 1:  # 最后一个tag
+                spans.append(span)
+        elif tag.startswith('I-') and span[1] != -1:
+            type_ = tag.split('-')[1]
+            if span[0] == type_:
+                span[2] = i
+            if i == len(labels) - 1:  # 最后一个tag
+                spans.append(span)
+        else:  # O
+            if span[2] != -1:
+                spans.append(span)
+            span = [None, -1, -1]
+
+    return spans
+
+
+def span2bio(spans, seq_len, default_tag='O'):
+    tags = [default_tag] * seq_len
+    for span in spans:
+        type_, s, e = span
+        if s == e:
+            tags[s] = 'B-' + type_
+        elif s < e:
+            tags[s: e+1] = ['B-' + type_] + ['I-' + type_] * (e - s)
+        else:
+            raise IndexError
+    return tags
+
 
 def extract_ner_bio_span(tag_seq: list):
     span_res = []
