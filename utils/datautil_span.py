@@ -67,8 +67,8 @@ def extract_ner_spans(start_logit, end_logit, mask):
     :param mask: (b, t)  0 for padding
     :return:
     '''
-    start_pred = start_logit.argmax(dim=-1).detach().cpu().numpy()[:, 1:]  # (b, t)
-    end_pred = end_logit.argmax(dim=-1).detach().cpu().numpy()[:, 1:]
+    start_pred = start_logit.argmax(dim=-1).detach().cpu().numpy()  # (b, t)
+    end_pred = end_logit.argmax(dim=-1).detach().cpu().numpy()
     pred_spans = []
     lens = mask.sum(dim=1).tolist()
     for start_ids, end_ids, l in zip(start_pred, end_pred, lens):
@@ -103,12 +103,12 @@ def batch_variable(batch_data, mVocab):
         chars.append([inst.char for inst in insts])
         mask[i, :seq_len].fill_(1)
 
-        tag_spans = extract_ner_bio_span([inst.ner_tag for inst in insts])
+        tag_spans = extract_ner_bio_span(['O'] + [inst.ner_tag for inst in insts])
         gold_span = []
         for s, e, tag in tag_spans:
             tag_idx = ner_tag_vocab.inst2idx(tag)
-            start_ids[i][s+1] = tag_idx
-            end_ids[i][e+1] = tag_idx
+            start_ids[i][s] = tag_idx
+            end_ids[i][e] = tag_idx
             gold_span.append((s, e, tag_idx))
         batch_spans.append(gold_span)
 
