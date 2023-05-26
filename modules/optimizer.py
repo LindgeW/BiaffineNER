@@ -125,7 +125,9 @@ class Optimizer(object):
                 if step == 0 and args.warmup_step == 0:
                     return 1.
                 else:
-                    return 1. / (step ** 0.5) if step > args.warmup_step else step / (args.warmup_step ** 1.5)
+                    #factor = 1. / (step ** 0.5) if step > args.warmup_step else step / (args.warmup_step ** 1.5)
+                    #return (args.d_model ** -0.5) * factor
+                    return (args.d_model ** -0.5) * min(step ** -0.5, step * (args.warmup_step ** -1.5))
 
             lr_scheduler = optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda)
         elif args.scheduler == 'linear':
