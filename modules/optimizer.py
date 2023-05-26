@@ -128,6 +128,7 @@ class Optimizer(object):
                     #factor = 1. / (step ** 0.5) if step > args.warmup_step else step / (args.warmup_step ** 1.5)
                     #return (args.d_model ** -0.5) * factor
                     return (args.d_model ** -0.5) * min(step ** -0.5, step * (args.warmup_step ** -1.5))
+                    # 初始lr需要设成1? 不一定，可以在这里除以初始lr
 
             lr_scheduler = optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda)
         elif args.scheduler == 'linear':
